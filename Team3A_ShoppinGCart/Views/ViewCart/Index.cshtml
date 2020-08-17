@@ -1,0 +1,172 @@
+﻿
+@{
+    ViewData["Title"] = "ViewCart";
+    Layout = "_ViewCartLayout";
+    //List<Cart_Model> cart = (List<Cart_Model>)ViewData["cart"];
+    //double TotalAmt = 0.0;
+    List<UserCart> cart = (List<UserCart>)ViewData["selectedproducts"];
+    var count = ViewData["count"];
+}
+
+
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Basket</title>
+    <link rel="stylesheet" href="~/css/ViewCart/ViewCart.css" />
+</head>
+<body>
+    <main>
+        <div class="basket">
+            @*<div class="basket-module">
+                    <label for="promo-code">Enter a promotional code</label>
+                    <input id="promo-code" type="text" name="promo-code" maxlength="5" class="promo-code-field">
+                    <button class="promo-code-cta">Apply</button>
+                </div>*@
+            <div class="basket-labels">
+                <ul>
+                    <li class="item item-heading">Item</li>
+                    <li class="price">Price</li>
+                    <li class="quantity">Quantity</li>
+                    <li class="subtotal">Subtotal</li>
+                </ul>
+            </div>
+            @{
+
+                double TotalAmt = 0.0;
+
+                foreach (var item in cart)
+                {
+                    
+                    TotalAmt += @item.subTotal;
+                        <div class="basket-product">
+                            <div class="item">
+                                <div class="product-image">
+                                    <img src="~/images/softwares/@item.ProductImage" alt="Placholder Image 2" class="product-frame">
+                                </div>
+                                <div class="product-details">
+                                    <h1><strong>@item.ProductName</strong> </h1>
+                                    <p>@item.ProductName</p>
+                                </div>
+                            </div>
+                            <div class="price">@item.ProductPrice.ToString(format: "#,##0.00")</div>
+                            <div class="quantity">
+                                <input type="number" value="@item.ProductQuantity" min="1" class="quantity-field">
+                            </div>
+                            <input type="hidden" value="@item.ProductId" />
+                            <div class="subtotal">@item.subTotal.ToString(format: "#,##0.00")</div>
+                            <div class="remove">
+                                @*<button action>Remove</button>*@
+                                @*<input type="button" value="Remove" onclick="location.href='@Url.Action("Delete", "ViewCart")'" id="@item.ProductId"  />*@
+                                <button value="Remove" onclick="DeleteProduct('@item.ProductId','@item.ProductQuantity')">Remove</button>
+                            </div>
+                        </div>
+                    }
+                }
+        <div width="auto" style="margin-left:300px; font-size:20px;">@Html.ActionLink("Continue Shopping", "Index", "List")</div>
+        </div>
+        <aside>
+            <div class="summary">
+                <div class="summary-total-items"><span class="total-items"></span> Items in your Bag</div>
+                <div class="summary-subtotal">
+                    <div class="subtotal-title">Subtotal</div>
+                    <div class="subtotal-value final-value" id="basket-subtotal">@TotalAmt.ToString(format: "#,##0.00")</div>
+                    <div class="summary-promo hide">
+                        <div class="promo-title">Promotion</div>
+                        <div class="promo-value final-value" id="basket-promo"></div>
+                    </div>
+                </div>
+
+                <div class="summary-total">
+                    <div class="total-title">Total</div>
+                    <div class="total-value final-value" id="basket-total">@TotalAmt.ToString(format: "#,##0.00")</div>
+                </div>
+                <div class="summary-checkout">
+                    <button class="checkout-cta" onclick="AddOrder('@TotalAmt')">Checkout</button>
+
+                    @*<button class="checkout-cta">@Html.ActionLink("Continue Shopping", "Index", "List")</button>*@
+                </div>
+            </div>
+        </aside>
+    </main>
+</body>
+
+</html>
+
+@section scripts{
+    <script>
+        $(".quantity-field").on("change", function () {
+            var productID = $(this).parent().next().val();
+            var quantity=$(this).val();
+            var productPrice = $(this).parent().prev().text();
+            $(this).parent().next().text(quantity * productPrice);
+            var subtotal = $(this).parent().next().text();
+
+            $.ajax({
+                type: "POST",
+                contentType: "application/json",
+                url: `@Url.Action("Quantity", "ViewCart")`,
+                data: JSON.stringify({
+                    ProductId: productID, ProductQuantity: Number(quantity), subTotal: Number(subtotal)
+                }),
+                success: function (response) {
+
+                },
+                error: function (response) {
+                    var result = JSON.parse(response.responseText);
+                    console.error("error " + result);
+                },
+                complete: function(result){
+                location.href="../ViewCart/Index";
+            }
+            });
+
+        })
+     //remove item from cart
+    function DeleteProduct(id, qty) {
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("Delete", "ViewCart")',
+            data: { id: id, qty: qty},
+            success: function (result) {
+                if (result.success) {
+                    //alert("Delete succeed");
+                }
+                else {
+                    alert("Remove item is failed.")
+                }
+            },
+            complete: function(result){
+                //window.location.replace(result.newUrl);
+                location.href="../ViewCart/Index";
+            }
+
+    });
+        }
+
+        //Checkout
+        function AddOrder(totalamt) {
+        $.ajax({
+            cache: false,
+            url: '@Url.Action("AddOrder", "ViewCart")',
+            data: {  totalamt: totalamt },
+            success: function (result) {
+                if (result.success) {
+                    alert("Order is successful.");
+                    location.href = "../MyPurchases/Index";
+                }
+                else {
+                    alert("Login Required");
+
+                    location.href = "../Login/Index";
+                }
+            },
+            complete: function (result) {
+            }
+    });
+        }
+    </script>
+}

@@ -1,0 +1,125 @@
+﻿@model ShoppinG_Cart.Models.User;
+
+@{
+    ViewBag.Title = "Index";
+    Layout = null;
+    var Status = ViewData["Status"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,800">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <title>SA50 Solutions</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/Layout/main2.css" />
+    <link rel="stylesheet" href="~/css/Layout/main.css" />
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script>
+        $(document).ready(function () {
+            $("#loginButton").click(function () {
+                var username = $("#username").val();
+                var password = $("#password").val();
+                if (username.length == 0 || password.length == 0) {
+                    $("#errmsg").html("All fields are required.");
+                    return;
+                }
+                var h = CryptoJS.MD5(password).toString();
+                $("#password").val("");
+                $.post("@Url.Action("UserExists", "Login")",
+                    {
+                        username: username,
+                        hashpassword: h
+                },
+                function (data) {
+                    if (data == 1) {
+                        document.getElementById("loginForm").submit();
+                    }
+                    else {
+                        $("#errmsg").html("Invalid login credentials.")
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="header">
+        <div class="inner_header">
+            <div class="logo_container">
+                <h1>SA50 <span>Solutions</span></h1>
+                <div class="searchbox">
+                    <input type="text" placeholder="Search..">
+                </div>
+            </div>
+
+            <ul class="navigation">
+                <a asp-area="" asp-controller="List" asp-action="Index"><li><button>Home</button></li></a>
+                <a asp-area="" asp-controller="List" asp-action="Index"><li><button>About</button></li></a>
+                <a asp-area="" asp-controller="Login" asp-action="Index"><li><button>Login</button></li></a>
+                <a asp-area="" asp-controller="Login" asp-action="Index"><li><button>Contact Us</button></li></a>
+                <span class="nav-icon">
+                    <i class="fas fa-cart-plus"></i>
+                </span>
+                <div class="cart-items"><a>0</a></div>
+            </ul>
+        </div>
+    </div>
+    <h2>Login</h2>
+    <div class="container">
+        <main role="main" class="pb-3">
+            <form id="loginForm" asp-controller="List" asp-action="LoggedIn" method="post">
+                <table align="center">
+                    <tbody>
+                        <tr>
+                            <td>Username:</td>
+                            <td>
+                                @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @id = "username", @name = "username", @placeholder = "Enter Username.." } })
+                            </td>
+                        </tr>
+                        <tr></tr>
+
+                        <tr></tr>
+                        <tr></tr>
+                        <tr></tr>
+                        <tr>
+                            <td>Password:</td>
+                            <td>
+                                @Html.EditorFor(model => model.Password, new { htmlAttributes = new { @class = "form-control", @type = "password", @id = "password", @name = "password", @placeholder = "Enter Password.." } })
+                                <h1 class="text-danger">@Status</h1>
+                        </tr>
+                        <tr>
+                            <td colspan="2" align="right">
+                                <input id="loginButton" type="button" value="Login" />
+                            </td>
+                            <td colspan="2" align="right">
+                                <input id="reset" type="reset" value="Reset" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="err">
+                                <div id="errmsg" class="text-danger"></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <input id="hashPwd" name="hashPassword" type="hidden" />
+            </form>
+
+        </main>
+    </div>
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - Login - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+</body>
+</html>

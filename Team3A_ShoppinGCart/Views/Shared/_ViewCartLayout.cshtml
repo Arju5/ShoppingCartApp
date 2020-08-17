@@ -1,0 +1,92 @@
+﻿@{
+    ViewData["Title"] = "LoggedIn";
+    Layout = null;
+    List<Product> products = (List<Product>)ViewData["products"];
+    var count = 0;
+    var uname = "SA50 Solutions";
+    var aboutcontroller = "List";
+    var logincontroller = "Login";
+    var about = "About";
+    var aboutview = "About";
+    var login = "Login";
+    var loginView = "Index";
+    if (ViewData["count"] != null)
+    {
+        count = (int)ViewData["count"];
+    }
+    if (ViewData["username"] != null)
+    {
+        uname = Convert.ToString(ViewData["username"]);
+        uname = "Hello, " + uname;
+        aboutcontroller = "MyPurchases";
+        logincontroller = "List";
+        about = "My Purchases";
+        aboutview = "Index";
+        login = "Logout";
+        loginView = "Logout";
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - CA_.NETCore</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" />
+    <link rel="stylesheet" href="~/css/MyPurchases.css" />
+    <link rel="stylesheet" href="~/css/ViewCart/ViewCart.css" />
+    <link rel="stylesheet" type="text/css" href="~/css/site.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,800">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <link href="~/lib/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="~/css/List/list.css" />
+    <script src="~/Scripts/modernizr-2.8.3.js"></script>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <div class="inner_header">
+            <div class="logo_container">
+                <h1>@uname</h1>
+                <div class="searchbox">
+                    <input type="text" placeholder="Search..">
+                </div>
+            </div>
+
+            <ul class="navigation">
+                <a asp-area="" asp-controller="List" asp-action="Index"><li><button>Home</button></li></a>
+                <a asp-area="" asp-controller=@aboutcontroller asp-action=@aboutview><li><button>@about</button></li></a>
+                <a asp-area="" asp-controller=@logincontroller asp-action=@loginView><li><button>@login</button></li></a>
+                <a asp-area="" asp-controller="Login" asp-action="Index"><li><button>Contact Us</button></li></a>
+                <a asp-area="" asp-controller="ViewCart" asp-action="Index">
+                    <li>
+                        <button>
+                            <span class="nav-icon">
+                                <i class="fas fa-cart-plus"></i>
+                            </span>
+                        </button>
+                    </li>
+                </a>
+            </ul>
+        </div>
+    </div>
+    <div class="container" style="margin-bottom:70px">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="border-top footer text-muted">
+        <div class="container">
+            &copy; 2020 - CA_.NETCore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+ </body>
+</html>

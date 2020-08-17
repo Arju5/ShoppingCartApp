@@ -1,0 +1,71 @@
+﻿@model IEnumerable<ShoppinG_Cart.Models.ViewModel.PurchaseHistoryViewModel>
+@{
+    ViewData["Title"] = "MyPurchases";
+    Layout = "_MyPurchaseLayout";
+}
+
+<!-- Body section -->
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Basket</title>
+</head>
+
+<body>
+    <main>
+        <div class="basket">
+            <div class="basket-module">
+                <h1><strong>My Purchases</strong></h1>
+            </div>
+            <div class="basket-labels">
+                <ul>
+                    <li class="item item-heading">Item</li>
+                    <li class="price">Price</li>
+                    <li class="quantity">Quantity</li>
+                    <li class="purchase-on">Purchased On</li>
+                </ul>
+            </div>
+            @foreach (var item in Model)
+            {
+        <div class="basket-product">
+            <div class="item">
+                <div>
+                    <img class="product-image" src="~/images/softwares/@item.ProductUrl" alt="Placholder Image 2">
+                </div>
+                <div class="product-details">
+                    <h6><strong>@item.ProductName</strong></h6>
+                    <p>@item.ProductDescription</p>
+                    @*<p>@item.ProductId</p>*@
+                </div>
+            </div>
+            <div class="price">@item.ProductPrice</div>
+            <div class="quantity">
+                @item.Quantity
+            </div>
+            <div class="purchase-on">@item.Orderdate</div>
+            <div class="continue" style="margin-left:300px; font-size:20px;">Activation Code</div>
+            @if (@item.ActivationCodeId.Count > 1)
+            {
+                <select id="cars">
+                    @foreach (var activationCode in @item.ActivationCodeId)
+                    {
+                        <option value="@activationCode">@activationCode</option>
+                    }
+                </select>
+            }
+            else
+            {
+                <div>@item.ActivationCodeId[0]</div>
+            }
+            <div class="continue" style="margin-left:300px; font-size:20px;"><a href="">Download</a></div>
+        </div>
+            }
+        </div>
+        @*<div class="continue" style="margin-left:300px; font-size:20px;">@Html.ActionLink("Continue Shopping", "LoggedIn", "List")</div>*@
+    </main>
+</body>
+
+</html>

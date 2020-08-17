@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "_ListLayout";
+}
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" type="text/css" href="~/css/site.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,800">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" />
+    <title>SA50 Solutions</title>
+</head>
+<body>
+    <div class="header">
+        <div class="inner_header">
+            <div class="logo_container">
+                <h1>SA50 <span>Solutions</span></h1>
+                <div class="searchbox">
+                    <form id="searchbox" asp-action="Index" asp-controller="List" method="post">
+                        <input type="text" placeholder="Search.." name="SearchString">
+                    </form>
+                </div>
+            </div>
+
+            <ul class="navigation">
+                <a asp-area="" asp-controller="List" asp-action="Index"><li><button>Home</button></li></a>
+                <a asp-area="" asp-controller="List" asp-action="Index"><li><button>About</button></li></a>
+                <a asp-area="" asp-controller="Login" asp-action="Index"><li><button>Login</button></li></a>
+                <a asp-area="" asp-controller="Login" asp-action="Index"><li><button>Contact Us</button></li></a>
+                <span class="nav-icon">
+                    <i class="fas fa-cart-plus"></i>
+                </span>
+                <div class="cart-items"><a>0</a></div>
+            </ul>
+        </div>
+    </div>
+    @RenderBody()
+</body>
+</html>
+
